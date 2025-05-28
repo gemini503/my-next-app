@@ -10,18 +10,21 @@ import {
     useForm
 } from "react-hook-form";
 
+import { useCallback } from "react";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
+import useLoginModal from "@/app/hooks/useLoginModal";
 import Modal from "./Modal";
 import Heading from "../navbar/Heading";
 import Input from "../inputs/Input";
 import toast from "react-hot-toast";
 import Button from "../Button";
 import { signIn } from "next-auth/react";
- 
+
 
 const RegisterModal = () => {
     const registerModal = useRegisterModal();
     const [isLoading, setIsLoading] = useState(false);
+    const loginModal = useLoginModal();
 
     const {
         register,
@@ -45,20 +48,25 @@ const RegisterModal = () => {
                 registerModal.onClose();
             })
             .catch(() => {
-               toast.error('Something went wrong');
+                toast.error('Something went wrong');
             })
             .finally(() => {
                 setIsLoading(false);
             })
-    } 
+    }
+
+    const toggle = useCallback(() => {
+        registerModal.onClose();
+        loginModal.onOpen();
+    }, [loginModal, registerModal])
 
     const bodyContent = (
         <div className="flex flex-col gap-4">
-            <Heading 
+            <Heading
                 title="Welcome to Airbnb"
                 subtitle="Create an account!"
             />
-            <Input 
+            <Input
                 id="name"
                 label="Name"
                 disabled={isLoading}
@@ -66,7 +74,7 @@ const RegisterModal = () => {
                 required
                 errors={errors}
             />
-             <Input 
+            <Input
                 id="email"
                 label="Email"
                 disabled={isLoading}
@@ -74,7 +82,7 @@ const RegisterModal = () => {
                 required
                 errors={errors}
             />
-             <Input 
+            <Input
                 id="password"
                 type="password"
                 label="Password"
@@ -88,14 +96,14 @@ const RegisterModal = () => {
 
     const footerContent = (
         <div className="flex flex-col gap-4 mt-3">
-            <hr/>
-            <Button 
+            <hr />
+            <Button
                 outline
                 label="Continue with Google"
                 icon={FcGoogle}
                 onClick={() => signIn('google')}
             />
-            <Button 
+            <Button
                 outline
                 label="Continue with Github"
                 icon={AiFillGithub}
@@ -115,7 +123,7 @@ const RegisterModal = () => {
                     </div>
                     <div className="text-neutral-800 cursor-pointer hover:underline">
                         <span
-                            onClick={registerModal.onClose}
+                            onClick={toggle}
                             className="
                                 text-neutral-800
                                 cursor-pointer
