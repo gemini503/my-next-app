@@ -2,6 +2,7 @@
 
 
 import Container from "../Container";
+import Categories from "./Categoies";
 import Logo from "./Logo";
 import Search from "./Search";
 import UseMenu from "./UseMenu";
@@ -38,6 +39,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     </div>
                 </Container>
             </div>
+            <Categories />
         </div>
     )
 }
